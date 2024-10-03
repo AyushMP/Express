@@ -8,7 +8,6 @@ import {
     updatePost 
 } from '../controllers/postController.js';
 
-
 //Get all posts
 router.get('/', getPosts);
 

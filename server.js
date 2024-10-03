@@ -3,6 +3,7 @@ import path from 'path';
 import posts from'./routes/posts.js';
 const port = process.env.PORT || 8000; 
 import logger from './middleware/logger.js'
+import errorHandler from './middleware/error.js';
 
 const app = express();
 
@@ -18,6 +19,9 @@ app.use(logger);
 
 //Routes
 app.use('/api/posts', posts);
+
+//Error Handler
+app.use(errorHandler);
 
 // app.get('/', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'public', 'index.html'));

@@ -1,85 +1,27 @@
 import express from 'express';
 const router = express.Router();
+import {
+    getPosts, 
+    getPost, 
+    createPost, 
+    deletePost, 
+    updatePost 
+} from '../controllers/postController.js';
 
-let posts = [
-    {id: 1, title: 'post one'},
-    {id: 2, title: 'post two'},
-    {id: 3, title: 'post three'},
-]
 
 //Get all posts
-router.get('/', (req, res) => {
-    const limit = parseInt(req.query.limit);
-    if (!isNaN(limit) && limit > 0){
-        res.status(200).json(posts.slice(0, limit));
-    }  
-    else{
-        res.status(200).json(posts);
-    }
-    // console.log(req.query)
-    res.json(posts);
-});
+router.get('/', getPosts);
 
 //Get single post
-router.get('/:id', (req, res, next) => {
-    // console.log(req.params.id);
-    const id = parseInt(req.params.id);
-    const post = posts.find((post) => post.id === id);
-    // res.status(200).json(posts.filter((post) => post.id === id));
-    if(!post){
-        const error = new Error( `A post with the id of ${id} was not found`)
-        error.status = 404;
-        return next(error);
-    }
-    res.status(200).json(posts);
-});
+router.get('/:id', getPost);
 
 //Create new post
-router.post('/', (req, res) => {
-    // console.log(req.body);
-    const newPost = {
-        id: posts.length + 1,
-        title: req.body.title
-    };
-
-    if(!newPost.title){
-        return res
-        .status(400)
-        .json({msg: 'Please incluse a title'});
-    }
-
-    posts.push(newPost);
-    res.status(201).json(posts);
-});
+router.post('/', createPost);
 
 //update Post
-router.put('/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    const post = posts.find((post) => post.id ===id);
-
-    if(!post){
-        return res
-        .status(404)
-        .json({ msg: `A post with the id of ${id} was not found`});
-    }
-
-    post.title = req.body.title;
-    res.status(200).json(posts);
-});
+router.put('/:id', updatePost);
 
 //Delete Post
-router.delete('/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    const post = posts.find((post) => post.id ===id);
-
-    if(!post){
-        return res
-        .status(404)
-        .json({ msg: `A post with the id of ${id} was not found`});
-    }
-
-    posts = posts.filter((post) => post.id !== id);
-    res.status(200).json(posts);
-});
+router.delete('/:id', deletePost);
 
 export default router;
